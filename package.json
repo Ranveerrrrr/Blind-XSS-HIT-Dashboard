@@ -1,0 +1,14 @@
+{
+  "name": "blind-xss-hit-dashboard",
+  "version": "1.0.0",
+  "description": "Blind XSS payload server and hit dashboard with login, filters, imports, exports, and Discord notifications.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
