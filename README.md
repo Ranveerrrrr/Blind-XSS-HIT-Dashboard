@@ -1,10 +1,10 @@
-# Blind XSS HIT Dashboard
+# XSSTrace
 
 ![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-4.x-000000?logo=express&logoColor=white)
 ![Render](https://img.shields.io/badge/Deploy-Render-46E3B7?logo=render&logoColor=000)
 ![Discord](https://img.shields.io/badge/Discord-Notifications-5865F2?logo=discord&logoColor=white)
-![License](https://img.shields.io/github/license/Ranveerrrrr/Blind-XSS-HIT-Dashboard)
+![License](https://img.shields.io/github/license/Ranveerrrrr/XSSTrace)
 
 A self-hosted Blind XSS payload server and hit dashboard with unlimited markers, page grouping, filters, import/export, and Discord alerts.
 
@@ -65,7 +65,7 @@ Do not put this behind a static host. It needs a backend because it receives and
 Your fork will look like:
 
 ```text
-https://github.com/YOUR_USERNAME/Blind-XSS-HIT-Dashboard
+https://github.com/YOUR_USERNAME/XSSTrace
 ```
 
 ## Step 2: Clone Your Fork
@@ -73,8 +73,8 @@ https://github.com/YOUR_USERNAME/Blind-XSS-HIT-Dashboard
 Clone your fork on your machine only so you can change example values and push your own copy.
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/Blind-XSS-HIT-Dashboard.git
-cd Blind-XSS-HIT-Dashboard
+git clone https://github.com/YOUR_USERNAME/XSSTrace.git
+cd XSSTrace
 ```
 
 ## Step 3: Replace Example Domains
@@ -117,7 +117,7 @@ git push origin main
 5. Select your forked repository:
 
 ```text
-YOUR_USERNAME/Blind-XSS-HIT-Dashboard
+YOUR_USERNAME/XSSTrace
 ```
 
 6. Use these settings:
@@ -133,7 +133,7 @@ Start Command: npm start
 Render will give you a temporary domain like:
 
 ```text
-https://blind-xss-hit-dashboard.onrender.com
+https://xsstrace.onrender.com
 ```
 
 Do not use that as your final payload domain if you have your own domain. Use it only until your custom subdomain is connected.

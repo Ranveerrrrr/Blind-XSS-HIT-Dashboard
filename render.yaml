@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: blind-xss-hit-dashboard
+    name: xsstrace
     env: node
     plan: free
     buildCommand: npm install
