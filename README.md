@@ -8,6 +8,8 @@
 
 A self-hosted Blind XSS payload server and hit dashboard with unlimited markers, page grouping, filters, import/export, and Discord alerts.
 
+<img width="1902" height="955" alt="image" src="https://github.com/user-attachments/assets/98cf2d38-749c-4a0a-9062-d9d5cae1ad10" />
+
 ## Why This Exists
 
 Blind XSS testing is painful when your callback tooling does not give you enough control.
