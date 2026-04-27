@@ -1,7 +1,7 @@
 {
   "name": "xsstrace",
   "version": "1.0.0",
-  "description": "Blind XSS payload server and hit dashboard with login, filters, imports, exports, and Discord notifications.",
+  "description": "Self-hosted Blind XSS testing dashboard with unlimited payload markers, callback logging, page grouping, Discord alerts, and import/export.",
   "main": "server.js",
   "type": "module",
   "scripts": {
