@@ -8,7 +8,8 @@
 
 A self-hosted Blind XSS payload server and hit dashboard with unlimited markers, page grouping, filters, import/export, and Discord alerts.
 
-<img width="1902" height="955" alt="image" src="https://github.com/user-attachments/assets/98cf2d38-749c-4a0a-9062-d9d5cae1ad10" />
+<img width="1877" height="594" alt="image" src="https://github.com/user-attachments/assets/32518d7b-aab4-4601-80ba-fb870aa4d9da" />
+<img width="1879" height="549" alt="image" src="https://github.com/user-attachments/assets/d054e05d-526e-4cd4-bbc8-2cdf6b1d04e1" />
 
 ## Why This Exists
 [Watch the explanation here — 1:19:30 to 1:21:40](https://youtu.be/5o0Ldc8Kypg?si=3QyGhKjxDyGIKu9l&t=4770)
