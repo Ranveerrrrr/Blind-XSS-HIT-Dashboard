@@ -287,6 +287,9 @@ Every new hit sends a Discord embed with:
 - IP
 - page URL/referrer
 - user agent
+<img width="598" height="275" alt="image" src="https://github.com/user-attachments/assets/792310fd-5a8c-48f9-8fb5-925e6a9ca0b7" />
+
+
 
 ## Step 10: Use The Dashboard
 
